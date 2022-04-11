@@ -23,20 +23,25 @@ public class EmployeePayrollService {
 
     public static void main(String[] args) {
 
-        Scanner SC = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
 
         ArrayList<EmployeePayrollData> employeePayrollList = new ArrayList<EmployeePayrollData>();
 
         EmployeePayrollService employeePayrollService = new EmployeePayrollService(employeePayrollList);
 
-        employeePayrollService.readEmployeeData(SC);
+        employeePayrollService.readEmployeeData(scanner);
 
-        employeePayrollService.write();
+        employeePayrollService.write(IOService.CONSOLE_IO);
     }
 
-    private void write() {
-
-        System.out.println("Given Employee Data is : " + employeePayrollList);
+    void write(IOService ioService) {
+        if (ioService.equals(ioService.CONSOLE_IO))
+        /**
+         * display the employee data in store in employeePayrollList
+         */
+            System.out.println("Given Employee Data is : " + employeePayrollList);
+        else if (ioService.equals(ioService.FILE_IO))
+            new EmployeePayrollFileIOService().writeData(employeePayrollList);
     }
 
     private void readEmployeeData(Scanner scanner) {
@@ -56,7 +61,21 @@ public class EmployeePayrollService {
     }
 
     public long countEntries(IOService fileIo) {
-
         return new EmployeePayrollFileIOService().countEntries(employeePayrollList);
+    }
+
+    public void printData(IOService fileIo) {
+        if (fileIo.equals(IOService.FILE_IO))
+            new EmployeePayrollFileIOService().printData((employeePayrollList));
+    }
+
+    /**
+     * Reading the employee payroll list so that we can do any operation
+     */
+    public long readEmployeeData(IOService fileIo) {
+        List<String> list = new ArrayList<>();
+        if (fileIo.equals(IOService.FILE_IO))
+            list = new EmployeePayrollFileIOService().readData();
+        return list.size();
     }
 }
